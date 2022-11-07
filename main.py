@@ -3,14 +3,6 @@ from tkinter import *
 from tkinter import messagebox as ms
 import sqlite3
 
-# make database and users (if not exists already) table at programme start up
-with sqlite3.connect('quit.db') as db:
-    c = db.cursor()
-
-c.execute('CREATE TABLE IF NOT EXISTS user (username TEXT NOT NULL PRIMARY KEY,password TEX NOT NULL);')
-db.commit()
-db.close()
-
 
 # main Class
 class main:
@@ -101,8 +93,7 @@ class main:
 
 
 if __name__ == '__main__':
-    # Create Object
-    # and setup window
+    # Create Object and setup window
     root = Tk()
     root.title('Login Form')
     # root.geometry('400x350+300+300')
