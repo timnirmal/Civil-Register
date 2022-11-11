@@ -58,6 +58,16 @@ def matchfingerprint(inputfilename, samplePath=None):
     print("Best score:  " + str(best_score))
     result = cv2.drawMatches(sample, kp1, image, kp2, mp, None)
     result = cv2.resize(result, None, fx=2.5, fy=2.5)
+    # rotate 90 degrees
+    result = cv2.rotate(result, cv2.ROTATE_90_CLOCKWISE)
+    # Add text Matched smaller font size
+    cv2.putText(result, "Matched", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    # best score to 2 decimal places
+    best_score = round(best_score, 2)
+    # Add text to the image with the best match color red
+    cv2.putText(result, str(round(best_score, 2))+" %", (10, 30), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255), 2)
+    cv2.imshow("Result", result)
+    cv2.waitKey(0)
 
     # Save the result image
     cv2.imwrite("../result.jpg", result)
@@ -67,7 +77,7 @@ def matchfingerprint(inputfilename, samplePath=None):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-    return filename, best_score
+    return filename, best_score, result
 
 
 # # check if file exists
