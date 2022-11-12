@@ -1,54 +1,69 @@
 from tkinter import *
 from tkinter import filedialog
 
+import cv2
+
 from lib import FingerPrintScan
 
 max_amount = 0
 label1 = None
 
+newFingerPrint = ""
 labelFingerPrint = None
 
 newName = ""
 labelName = None
-def updateLabelName(data):
-    global newName, labelName
-    newName = data
-    labelName.configure(text=newName)
 
 newStatus = ""
 labelStatus = None
-def updateLabelStatus(data="Thimira"):
-    global newStatus, labelStatus
-    newStatus = data
-    labelStatus.configure(text=newStatus)
 
 newDOB = ""
 labelDOB = None
-def updateLabelDOB(data):
-    global newDOB, labelDOB
-    newDOB = data
-    labelDOB.configure(text=newDOB)
 
 newAge = ""
 lableAge = None
-def updateLabelAge(data):
-    global newAge, labelAge
-    newAge = data
-    labelAge.configure(text="Age: "+newAge)
 
 newJob = ""
 labelJob = None
-def updateLabelJob(data):
-    global newJob, labelJob
-    newJob = data
-    labelJob.configure(text=newJob)
 
 newAddress = ""
 labelAddress = None
-def updateLabelAddress(data):
-    global newAddress, labelAddress
-    newAddress = data
-    labelAddress.configure(text=newAddress)
+
+newBirthPlace = ""
+labelBirthPlace = None
+newMothersName = ""
+labelMothersName = None
+newFathersName = ""
+labelFathersName = None
+newGrandfathersName = ""
+labelGrandfathersName = None
+
+newNicNumber = ""
+labelNicNumber = None
+newOtherName = ""
+labelOtherName = None
+
+newFamilyCount = ""
+labelFamilyCount = None
+newSexCount = ""
+labelSexCount = None
+newMCount = ""
+labelMCount = None
+newFCount = ""
+labelFCount = None
+# List of jobs
+jobs = []
+
+newMarriageDate = ""
+labelMarriageDate = None
+newmArriagePlace = ""
+labelMarriagePlace = None
+newHusbandName = ""
+labelHusbandName = None
+newWifeName = ""
+labelWifeName = None
+
+
 
 def updateData():
     data = "Thimira"
@@ -73,6 +88,62 @@ def updateData():
     labelAge.configure(text=newAge)
     labelJob.configure(text=newJob)
     labelAddress.configure(text=newAddress)
+
+    global newFingerPrint, labelFingerPrint
+    newFingerPrint = r"C:\Users\timni\PycharmProjects\Civil-Register\image 1.png"
+    print("Before set")
+    print(newFingerPrint)
+    # show image in cv2 window if image is not empty
+    if newFingerPrint:
+        print("After set")
+        print(newFingerPrint)
+        newIMG = PhotoImage(file=newFingerPrint)
+        labelFingerPrint.configure(image=newIMG)
+
+    global newBirthPlace, labelBirthPlace
+    global newmOthersName, labelmOthersName
+    global newFathersName, labelFathersName
+    global newGrandfathersName, labelGrandfathersName
+    global newNicNumber, labelNicNumber
+    global newOtherName, labelOtherName
+    global newFamilyCount, labelFamilyCount
+    global newSexCount, labelSexCount
+    global newMCount, labelMCount
+    global newFCount, labelFCount
+    global newMarriageDate, labelMarriageDate
+    global newmArriagePlace, labelMarriagePlace
+    global newHusbandName, labelHusbandName
+    global newWifeName, labelWifeName
+
+    newBirthPlace = "Colombo"
+    newmOthersName = "Thimira"
+    newFathersName = "Thimira"
+    newGrandfathersName = "Thimira"
+    newNicNumber = "Thimira"
+    newOtherName = "Thimira"
+    newFamilyCount = "Thimira"
+    newSexCount = "Thimira"
+    newMCount = "Thimira"
+    newFCount = "Thimira"
+    newMarriageDate = "Thimira"
+    newmArriagePlace = "Thimira"
+    newHusbandName = "Thimira"
+    newWifeName = "Thimira"
+
+    labelBirthPlace.configure(text=newBirthPlace)
+    labelmOthersName.configure(text=newmOthersName)
+    labelFathersName.configure(text=newFathersName)
+    labelGrandfathersName.configure(text=newGrandfathersName)
+    labelNicNumber.configure(text=newNicNumber)
+    labelOtherName.configure(text=newOtherName)
+    labelFamilyCount.configure(text=newFamilyCount)
+    labelSexCount.configure(text=newSexCount)
+    labelMCount.configure(text=newMCount)
+    labelFCount.configure(text=newFCount)
+    labelMarriageDate.configure(text=newMarriageDate)
+    labelMarriagePlace.configure(text=newmArriagePlace)
+    labelHusbandName.configure(text=newHusbandName)
+    labelWifeName.configure(text=newWifeName)
 
 
 
@@ -218,22 +289,12 @@ if __name__ == '__main__':
     """ Fingerprint section and basic info in middle frame """
     # Image Widget for middle frame in x=84 y=48 size=276x334
     print("Before ReadFinger")
-    print(imageNameLocal.get())
-    print(imageNameLocal.get())
-    print(imageNameLocal.get())
-    print(imageNameLocal.get())
-    print(imageNameLocal.get())
-    print(imageNameLocal.get())
-    print(imageNameLocal.get())
-    if imageNameLocal.get() == "":
-        img = PhotoImage(file="image 1.png")
-    else:
-        img = PhotoImage(file=imageNameLocal.get())
+
+    newFingerPrint = PhotoImage(file='image 1.png')
     # label = Label(middle, image=img, width=250, height=303, bg='white')
-    labelFingerPrint = Label(middle, image=img, width=240, height=291, bg='white')
-    # resize image to fit label size
-    labelFingerPrint.image = img
+    labelFingerPrint = Label(middle, image=newFingerPrint, width=240, height=291, bg='white')
     labelFingerPrint.place(x=84, y=30)
+
     # Two button below image in x=84 y=374 size=276x48 call ReadFinger function
     btn = Button(middle, text='Capture', font=('arial', 15), width=10, height=1, bg='green', fg='white',
                  command=updateData, cursor='hand2')
@@ -312,17 +373,17 @@ if __name__ == '__main__':
     # Father’s Name :
     # Grandfather’s Name :
     # Label below Birth Certificate in x=84 y=96 size=276x48 "Birth Place"
-    label = Label(bottom, text='Birth Place', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=84, y=48)
+    labelBirthPlace = Label(bottom, text='Birth Place', font=('arial', font_size), fg='black', bg='white')
+    labelBirthPlace.place(x=84, y=48)
     # Label below Birth Place in x=84 y=144 size=276x48 "Mother’s Name"
-    label = Label(bottom, text='Mother’s Name', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=84, y=96)
+    labelMothersName = Label(bottom, text='Mother’s Name', font=('arial', font_size), fg='black', bg='white')
+    labelMothersName.place(x=84, y=96)
     # Label below Mother’s Name in x=84 y=192 size=276x48 "Father’s Name"
-    label = Label(bottom, text='Father’s Name', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=84, y=144)
+    labelFathersName = Label(bottom, text='Father’s Name', font=('arial', font_size), fg='black', bg='white')
+    labelFathersName.place(x=84, y=144)
     # Label below Father’s Name in x=84 y=240 size=276x48 "Grandfather’s Name"
-    label = Label(bottom, text='Grandfather’s Name', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=84, y=192)
+    labelGrandfathersName = Label(bottom, text='Grandfather’s Name', font=('arial', font_size), fg='black', bg='white')
+    labelGrandfathersName.place(x=84, y=192)
     # Section 2
     # Section 2 Label in x=420 y=48 size=276x48 "NIC"
     label = Label(bottom, text='NIC', font=('arial', 14), fg='black', bg='white')
@@ -331,11 +392,11 @@ if __name__ == '__main__':
     # NIC Number :
     # Other name :
     # Label below NIC in x=420 y=96 size=276x48 "NIC Number"
-    label = Label(bottom, text='NIC Number', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=420, y=48)
+    labelNicNumber = Label(bottom, text='NIC Number', font=('arial', font_size), fg='black', bg='white')
+    labelNicNumber.place(x=420, y=48)
     # Label below NIC Number in x=420 y=144 size=276x48 "Other name"
-    label = Label(bottom, text='Other name', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=420, y=96)
+    labelOtherName = Label(bottom, text='Other name', font=('arial', font_size), fg='black', bg='white')
+    labelOtherName.place(x=420, y=96)
     # Section 3
     # Section 3 Label in x=756 y=48 size=276x48 "Vital Stats"
     label = Label(bottom, text='Vital Stats', font=('arial', 14), fg='black', bg='white')
@@ -350,20 +411,20 @@ if __name__ == '__main__':
     label = Label(bottom, text='Family Count', font=('arial', font_size), fg='black', bg='white')
     label.place(x=756, y=48)
     # Label below Family Count in x=756 y=144 size=276x48 "Sex Count"
-    label = Label(bottom, text='Sex Count', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=756, y=96)
+    labelFamilyCount = Label(bottom, text='Sex Count', font=('arial', font_size), fg='black', bg='white')
+    labelFamilyCount.place(x=756, y=96)
     # Label below Sexuality Count in x=756 y=192 size=276x48 "M count"
-    label = Label(bottom, text='M Count', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=756, y=144)
+    labelSexCount = Label(bottom, text='M Count', font=('arial', font_size), fg='black', bg='white')
+    labelSexCount.place(x=756, y=144)
     # Label Right to M Count in x=756 y=240 size=276x48 "F Count"
-    label = Label(bottom, text='F Count', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=756, y=192)
+    labelFCount = Label(bottom, text='F Count', font=('arial', font_size), fg='black', bg='white')
+    labelFCount.place(x=756, y=192)
     # Label below Sexuality Count in x=756 y=288 size=276x48 "Jobs"
-    label = Label(bottom, text='Jobs', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=756, y=240)
+    labelMCount = Label(bottom, text='Jobs', font=('arial', font_size), fg='black', bg='white')
+    labelMCount.place(x=756, y=240)
     # Label below Jobs in x=756 y=336 size=276x48 "person name - job"
-    label = Label(bottom, text='person name - job', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=756, y=288)
+    labelJob = Label(bottom, text='person name - job', font=('arial', font_size), fg='black', bg='white')
+    labelJob.place(x=756, y=288)
     # Section 4
     # Section 4 Label in x=1092 y=48 size=276x48 "Marriage Certificate"
     label = Label(bottom, text='Marriage Certificate', font=('arial', 14), fg='black', bg='white')
@@ -374,17 +435,17 @@ if __name__ == '__main__':
     # Husband Name :
     # Wife Name :
     # Label below Marriage Certificate in x=1092 y=96 size=276x48 "Marriage Date"
-    label = Label(bottom, text='Marriage Date', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=1092, y=48)
+    labelMarriageDate = Label(bottom, text='Marriage Date', font=('arial', font_size), fg='black', bg='white')
+    labelMarriageDate.place(x=1092, y=48)
     # Label below Marriage Date in x=1092 y=144 size=276x48 "Marriage Place"'
-    label = Label(bottom, text='Marriage Place', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=1092, y=96)
+    labelMarriagePlace = Label(bottom, text='Marriage Place', font=('arial', font_size), fg='black', bg='white')
+    labelMarriagePlace.place(x=1092, y=96)
     # Label below Marriage Place in x=1092 y=192 size=276x48 "Husband Name"
-    label = Label(bottom, text='Husband Name', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=1092, y=144)
+    labelHusbandName = Label(bottom, text='Husband Name', font=('arial', font_size), fg='black', bg='white')
+    labelHusbandName.place(x=1092, y=144)
     # Label below Husband Name in x=1092 y=240 size=276x48 "Wife Name"
-    label = Label(bottom, text='Wife Name', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=1092, y=192)
+    labelWifeName = Label(bottom, text='Wife Name', font=('arial', font_size), fg='black', bg='white')
+    labelWifeName.place(x=1092, y=192)
 
     # # Entry Right of image in x=420 y=144 size=200x48
     # entry = Entry(middle, font=('arial', 15), width=30)
