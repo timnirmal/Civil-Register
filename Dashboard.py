@@ -274,12 +274,6 @@ def updateData():
         labelWifeName.configure(text="Wife Name : " + newWifeName)
 
 
-def fun():
-    global max_amount, label1
-    max_amount = 100
-    label1.configure(text='Balance :$' + str(max_amount))
-
-
 def logout():
     root.destroy()
 

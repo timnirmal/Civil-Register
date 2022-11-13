@@ -22,10 +22,10 @@ def matchfingerprint(inputfilename, samplePath=None):
     print("DATASET_PATH ",DATASET_PATH)
     print("DATASET_PATH ",DATASET_PATH)
     print()
-    print("INPUT FILENAME ",inputfilename) # C:/Users/timni/PycharmProjects/Civil-Register/Data/Altered/SelectedData/2__F_Right_index_finger_CR.BMP
+    print("INPUT FILENAME ",inputfilename)
     print("SAMPLE PATH ",samplePath)
     print()
-    print("Current Directory ",os.getcwd()) # C:\Users\timni\PycharmProjects\Civil-Register
+    print("Current Directory ",os.getcwd())
     print()
 
     for file in os.listdir(DATASET_PATH):
