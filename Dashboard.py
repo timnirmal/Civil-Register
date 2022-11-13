@@ -1,3 +1,5 @@
+import sqlite3
+from datetime import date
 from tkinter import *
 from tkinter import filedialog
 
@@ -56,13 +58,12 @@ jobs = []
 
 newMarriageDate = ""
 labelMarriageDate = None
-newmArriagePlace = ""
+newMarriagePlace = ""
 labelMarriagePlace = None
 newHusbandName = ""
 labelHusbandName = None
 newWifeName = ""
 labelWifeName = None
-
 
 
 def updateData():
@@ -74,13 +75,84 @@ def updateData():
     global newAge, labelAge
     global newJob, labelJob
     global newAddress, labelAddress
+    global newFingerPrint, labelFingerPrint
 
-    newName = data
-    newStatus = data
-    newDOB = "1999-01-01"
-    newAge = "22"
-    newJob = "Student"
-    newAddress = "Colombo"
+    """ Read finger from sensor and return image """
+    # Select File dialog box
+    file = filedialog.askopenfilename(initialdir=r"C:\Users\timni\PycharmProjects\Civil-Register\Data\Altered"
+                                                 r"\SelectedData", title='Select File',
+                                      filetypes=(('BMP', '*.bmp'), ('All Files', '*.*')))
+    print("Before file")
+    print(file)
+    newFileName = ""
+    if file:
+        filename, best_score, result = FingerPrintScan.matchfingerprint(file)
+        print("After file")
+        print(filename)
+        print(best_score)
+        print(result)
+        imageNameLocal.set(filename)
+        print("After set")
+        print(imageNameLocal.get())
+
+        # newIMG = PhotoImage(file=filename)
+        # labelFingerPrint.configure(image=newIMG)
+        # set newFileName to the file name
+        newFileName = filename
+
+    # From newFileName get the data  (2__F_Right_index_finger.BMP -> 2)
+    id = newFileName.split("__")[0]
+
+    # From person table in Database get the data
+    # PersonID, NIC, Name, Email, Password, Phone, Address, ImageID
+    conn = sqlite3.connect('Database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM person WHERE PersonID = ?", (id,))
+    dataPerson = c.fetchone()
+    print(dataPerson)
+
+    # From user table in Database get the data
+    # UserID, PersonID, Status, DOB, Age, Job, Address, FingerPrint
+    c.execute("SELECT * FROM user WHERE UserID = ?", (id,))
+    dataUser = c.fetchone()
+    print(dataUser)
+
+    # From NICCard table in Database get the data
+    # ---- PersonID, NIC, Name, OtherName, DateOfBirth, BirthLocation, Job, Address
+    c.execute("SELECT * FROM niccard WHERE PersonID = ?", (id,))
+    dataNICCard = c.fetchone()
+    print(dataNICCard)
+
+    # From Marriage Certificate table in Database get the data
+    # ---- PersonID1, PersonID2, (PersonID1 and PersonID2 as Primary key) DateOfMarriage
+    c.execute("SELECT * FROM marriagecertificate WHERE PersonID1 = ? OR PersonID2 = ?", (id, id))
+    dataMarriageCertificate = c.fetchone()
+    print(dataMarriageCertificate)
+
+    # From Birth Certificate table in Database get the data
+    # ---- CertificateID, PersonID, DateOfBirth, MotherID, FatherID, GrandfatherID (Later Calculate Age)
+    c.execute("SELECT * FROM birthcertificate WHERE PersonID = ?", (id,))
+    dataBirthCertificate = c.fetchone()
+    print(dataBirthCertificate)
+
+    # From Vital Stats table in Database get the data
+    # ---- PersonID, FamilyCount, MaleCount, FemaleCount, TheirJobs
+    c.execute("SELECT * FROM vitalstats WHERE PersonID = ?", (id,))
+    dataVitalStats = c.fetchone()
+    print(dataVitalStats)
+
+
+    newName = dataPerson[2]
+    if dataMarriageCertificate is not None:
+        newStatus = "Married"
+    else:
+        newStatus = "Not Married"
+    newDOB = dataBirthCertificate[2]
+    # Calculate Age today - DOB
+    today = date.today()
+    newAge = today.year - int(newDOB.split("/")[2])
+    newJob = dataNICCard[6]
+    newAddress = dataNICCard[7]
 
     labelName.configure(text=newName)
     labelStatus.configure(text=newStatus)
@@ -89,19 +161,31 @@ def updateData():
     labelJob.configure(text=newJob)
     labelAddress.configure(text=newAddress)
 
-    global newFingerPrint, labelFingerPrint
-    newFingerPrint = r"C:\Users\timni\PycharmProjects\Civil-Register\image 1.png"
-    print("Before set")
-    print(newFingerPrint)
-    # show image in cv2 window if image is not empty
-    if newFingerPrint:
-        print("After set")
-        print(newFingerPrint)
-        newIMG = PhotoImage(file=newFingerPrint)
-        labelFingerPrint.configure(image=newIMG)
+    print("After set")
+    print("After set")
+    print("After set")
+    print("After set")
+    print("After set")
+    print("After set")
+    print("After set")
+    print("After set")
+    print("After set")
+
+
+
+    # newFingerPrint = r"C:\Users\timni\PycharmProjects\Civil-Register\image 1.png"
+    # print("Before set")
+    # print(newFingerPrint)
+    # # show image in cv2 window if image is not empty
+    # if newFingerPrint:
+    #     print("After set")
+    #     print(newFingerPrint)
+    #     newIMG = PhotoImage(file=newFingerPrint)
+    #     print("newIMG  ", newIMG)
+    #     labelFingerPrint.configure(image=newIMG)
 
     global newBirthPlace, labelBirthPlace
-    global newmOthersName, labelmOthersName
+    global newMothersName, labelMothersName
     global newFathersName, labelFathersName
     global newGrandfathersName, labelGrandfathersName
     global newNicNumber, labelNicNumber
@@ -111,41 +195,87 @@ def updateData():
     global newMCount, labelMCount
     global newFCount, labelFCount
     global newMarriageDate, labelMarriageDate
-    global newmArriagePlace, labelMarriagePlace
+    global newMarriagePlace, labelMarriagePlace
     global newHusbandName, labelHusbandName
     global newWifeName, labelWifeName
 
-    newBirthPlace = "Colombo"
-    newmOthersName = "Thimira"
-    newFathersName = "Thimira"
-    newGrandfathersName = "Thimira"
-    newNicNumber = "Thimira"
-    newOtherName = "Thimira"
-    newFamilyCount = "Thimira"
-    newSexCount = "Thimira"
-    newMCount = "Thimira"
-    newFCount = "Thimira"
-    newMarriageDate = "Thimira"
-    newmArriagePlace = "Thimira"
-    newHusbandName = "Thimira"
-    newWifeName = "Thimira"
+    newMothersID = dataBirthCertificate[3]
+    newFathersID = dataBirthCertificate[4]
+    newGrandfathersID = dataBirthCertificate[5]
 
-    labelBirthPlace.configure(text=newBirthPlace)
-    labelmOthersName.configure(text=newmOthersName)
-    labelFathersName.configure(text=newFathersName)
-    labelGrandfathersName.configure(text=newGrandfathersName)
-    labelNicNumber.configure(text=newNicNumber)
-    labelOtherName.configure(text=newOtherName)
-    labelFamilyCount.configure(text=newFamilyCount)
-    labelSexCount.configure(text=newSexCount)
-    labelMCount.configure(text=newMCount)
-    labelFCount.configure(text=newFCount)
-    labelMarriageDate.configure(text=newMarriageDate)
-    labelMarriagePlace.configure(text=newmArriagePlace)
-    labelHusbandName.configure(text=newHusbandName)
-    labelWifeName.configure(text=newWifeName)
+    # From person table in Database get the data
+    # PersonID, NIC, Name, Email, Password, Phone, Address, ImageID
+    c.execute("SELECT * FROM person WHERE PersonID = ?", (newMothersID,))
+    dataPerson = c.fetchone()
+    print(dataPerson)
+    newMothersName = dataPerson[2]
+
+    c.execute("SELECT * FROM person WHERE PersonID = ?", (newFathersID,))
+    dataPerson = c.fetchone()
+    print(dataPerson)
+    newFathersName = dataPerson[2]
+
+    c.execute("SELECT * FROM person WHERE PersonID = ?", (newGrandfathersID,))
+    dataPerson = c.fetchone()
+    print(dataPerson)
+    newGrandfathersName = dataPerson[2]
+
+    newBirthPlace = dataNICCard[5]
+    newNicNumber = dataNICCard[1]
+    newOtherName = dataNICCard[3]
+    newFamilyCount = dataVitalStats[1]
+    newSexCount = 0
+    newMCount = dataVitalStats[2]
+    newFCount = dataVitalStats[3]
+    newMarriageDate = dataMarriageCertificate[2]
+    newMarriagePlace = "Colombo"
+    newHusbandName = dataMarriageCertificate[1]
+    newWifeName = dataMarriageCertificate[2]
+
+    if newBirthPlace is not None:
+        labelBirthPlace.configure(text=newBirthPlace)
+    if newMothersName is not None:
+        labelMothersName.configure(text=newMothersName)
+    if newFathersName is not None:
+        labelFathersName.configure(text=newFathersName)
+    if newGrandfathersName is not None:
+        labelGrandfathersName.configure(text=newGrandfathersName)
+    if newNicNumber is not None:
+        labelNicNumber.configure(text=newNicNumber)
+    if newOtherName is not None:
+        labelOtherName.configure(text=newOtherName)
+    if newFamilyCount is not None:
+        labelFamilyCount.configure(text=newFamilyCount)
+    if newSexCount is not None:
+        labelSexCount.configure(text=newSexCount)
+    if newMCount is not None:
+        labelMCount.configure(text=newMCount)
+    if newFCount is not None:
+        labelFCount.configure(text=newFCount)
+    if newMarriageDate is not None:
+        labelMarriageDate.configure(text=newMarriageDate)
+    if newMarriagePlace is not None:
+        labelMarriagePlace.configure(text=newMarriagePlace)
+    if newHusbandName is not None:
+        labelHusbandName.configure(text=newHusbandName)
+    if newWifeName is not None:
+        labelWifeName.configure(text=newWifeName)
+        
 
 
+    labelMothersName.configure(text="Mothers Name : " + newMothersName)
+    labelFathersName.configure(text="Fathers Name : " + newFathersName)
+    labelGrandfathersName.configure(text="Grandfathers Name : " + newGrandfathersName)
+    labelNicNumber.configure(text="NIC Number : " + newNicNumber)
+    labelOtherName.configure(text="Other Name : " + newOtherName)
+    labelFamilyCount.configure(text="Family Count : " + str(newFamilyCount))
+    labelSexCount.configure(text="Sex Count")
+    labelMCount.configure(text="M count : " + str(newMCount))
+    labelFCount.configure(text="F count : " + str(newFCount))
+    labelMarriageDate.configure(text="Marriage Date : " + newMarriageDate)
+    labelMarriagePlace.configure(text="Marriage Place : " + newMarriagePlace)
+    labelHusbandName.configure(text="Husband Name : " + newHusbandName)
+    labelWifeName.configure(text="Wife Name : " + newWifeName)
 
 
 def fun():
@@ -185,10 +315,11 @@ def ReadFinger():
 
         return filename, best_score, result
 
+
 def updateLabelName():
     global newName, labelName
     newName = "Thimira"
-    labelName.configure(text="Hey "+newName)
+    labelName.configure(text="Hey " + newName)
 
 
 if __name__ == '__main__':
@@ -321,7 +452,6 @@ if __name__ == '__main__':
     # Label Right to Name to show name in x=600 y=96 size=200x48 show name
     labelName = Label(middle, text=newName, font=('arial', 15), fg='black', bg='white')
     labelName.place(x=600, y=96)
-
 
     # Label Right of image in x=420 y=144 size=200x48
     label = Label(middle, text='Status', font=('arial', 15), fg='black', bg='white')

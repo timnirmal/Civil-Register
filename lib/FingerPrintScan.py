@@ -66,16 +66,16 @@ def matchfingerprint(inputfilename, samplePath=None):
     best_score = round(best_score, 2)
     # Add text to the image with the best match color red
     cv2.putText(result, str(round(best_score, 2))+" %", (10, 30), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255), 2)
-    cv2.imshow("Result", result)
-    cv2.waitKey(0)
+    # cv2.imshow("Result", result)
+    # cv2.waitKey(0)
 
     # Save the result image
     cv2.imwrite("../result.jpg", result)
 
     # Show the result on screen with Naming 2 images
-    cv2.imshow("Fingerprint Matching", result)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow("Fingerprint Matching", result)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     return filename, best_score, result
 

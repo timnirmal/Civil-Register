@@ -14,7 +14,7 @@ c.execute('CREATE TABLE IF NOT EXISTS birthcertificate (CertificateID INTEGER NO
 c.execute('CREATE TABLE IF NOT EXISTS niccard (PersonID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, NIC TEXT NOT NULL, Name TEXT NOT NULL, OtherName TEXT NOT NULL, DateOfBirth TEXT NOT NULL, BirthLocation TEXT NOT NULL, Job TEXT NOT NULL, Address TEXT NOT NULL);')
 
 # -- Vital Stats
-# ---- FamilyCount, FamilyCount, GenderCount, TheirJobs
+# ---- PersonID, FamilyCount, MaleCount, FemaleCount, TheirJobs
 c.execute('CREATE TABLE IF NOT EXISTS vitalstats (PersonID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, FamilyCount TEXT NOT NULL, GenderCount TEXT NOT NULL, TheirJobs TEXT NOT NULL);')
 
 # -- Marriage Certificate
