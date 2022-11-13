@@ -55,6 +55,8 @@ newFCount = ""
 labelFCount = None
 # List of jobs
 jobs = []
+newJobVital = ""
+labelJobVital = None
 
 newMarriageDate = ""
 labelMarriageDate = None
@@ -141,7 +143,6 @@ def updateData():
     dataVitalStats = c.fetchone()
     print(dataVitalStats)
 
-
     newName = dataPerson[2]
     if dataMarriageCertificate is not None:
         newStatus = "Married"
@@ -151,7 +152,7 @@ def updateData():
     # Calculate Age today - DOB
     today = date.today()
     newAge = today.year - int(newDOB.split("/")[2])
-    newJob = dataNICCard[6]
+    newJob = dataNICCard[5]
     newAddress = dataNICCard[7]
 
     labelName.configure(text=newName)
@@ -171,8 +172,6 @@ def updateData():
     print("After set")
     print("After set")
 
-
-
     # newFingerPrint = r"C:\Users\timni\PycharmProjects\Civil-Register\image 1.png"
     # print("Before set")
     # print(newFingerPrint)
@@ -190,6 +189,7 @@ def updateData():
     global newGrandfathersName, labelGrandfathersName
     global newNicNumber, labelNicNumber
     global newOtherName, labelOtherName
+    global newJobVital, labelJobVital
     global newFamilyCount, labelFamilyCount
     global newSexCount, labelSexCount
     global newMCount, labelMCount
@@ -220,62 +220,58 @@ def updateData():
     print(dataPerson)
     newGrandfathersName = dataPerson[2]
 
+    newHusbandID = dataMarriageCertificate[0]
+    newWifeID = dataMarriageCertificate[1]
+
+    c.execute("SELECT * FROM person WHERE PersonID = ?", (newHusbandID,))
+    dataPerson = c.fetchone()
+    print(dataPerson)
+    newHusbandName = dataPerson[2]
+
+    c.execute("SELECT * FROM person WHERE PersonID = ?", (newWifeID,))
+    dataPerson = c.fetchone()
+    print(dataPerson)
+    newWifeName = dataPerson[2]
+
     newBirthPlace = dataNICCard[5]
     newNicNumber = dataNICCard[1]
     newOtherName = dataNICCard[3]
     newFamilyCount = dataVitalStats[1]
     newSexCount = 0
-    newMCount = dataVitalStats[2]
-    newFCount = dataVitalStats[3]
+    newMCount = dataVitalStats[4]
+    newFCount = dataVitalStats[5]
     newMarriageDate = dataMarriageCertificate[2]
     newMarriagePlace = "Colombo"
-    newHusbandName = dataMarriageCertificate[1]
-    newWifeName = dataMarriageCertificate[2]
+    newJobVital = dataNICCard[5]
 
     if newBirthPlace is not None:
-        labelBirthPlace.configure(text=newBirthPlace)
+        labelBirthPlace.configure(text="Birth Place : " + newBirthPlace)
     if newMothersName is not None:
-        labelMothersName.configure(text=newMothersName)
+        labelMothersName.configure(text="Mother's Name : " + newMothersName)
     if newFathersName is not None:
-        labelFathersName.configure(text=newFathersName)
+        labelFathersName.configure(text="Father's Name : " + newFathersName)
     if newGrandfathersName is not None:
-        labelGrandfathersName.configure(text=newGrandfathersName)
+        labelGrandfathersName.configure(text="Grandfather's Name : " + newGrandfathersName)
     if newNicNumber is not None:
-        labelNicNumber.configure(text=newNicNumber)
+        labelNicNumber.configure(text="NIC Number : " + newNicNumber)
     if newOtherName is not None:
-        labelOtherName.configure(text=newOtherName)
+        labelOtherName.configure(text="Other Name : " + newOtherName)
     if newFamilyCount is not None:
-        labelFamilyCount.configure(text=newFamilyCount)
-    if newSexCount is not None:
-        labelSexCount.configure(text=newSexCount)
+        labelFamilyCount.configure(text="Family Count : " + newFamilyCount)
+    # if newSexCount is not None:
+    #     labelSexCount.configure(text="Sex Count")
     if newMCount is not None:
-        labelMCount.configure(text=newMCount)
+        labelMCount.configure(text="M count : " + str(newMCount))
     if newFCount is not None:
-        labelFCount.configure(text=newFCount)
+        labelFCount.configure(text="F count : " + str(newFCount))
     if newMarriageDate is not None:
-        labelMarriageDate.configure(text=newMarriageDate)
+        labelMarriageDate.configure(text="Marriage Date : " + newMarriageDate)
     if newMarriagePlace is not None:
-        labelMarriagePlace.configure(text=newMarriagePlace)
+        labelMarriagePlace.configure(text="Marriage Place : " + newMarriagePlace)
     if newHusbandName is not None:
-        labelHusbandName.configure(text=newHusbandName)
+        labelHusbandName.configure(text="Husband Name : " + newHusbandName)
     if newWifeName is not None:
-        labelWifeName.configure(text=newWifeName)
-        
-
-
-    labelMothersName.configure(text="Mothers Name : " + newMothersName)
-    labelFathersName.configure(text="Fathers Name : " + newFathersName)
-    labelGrandfathersName.configure(text="Grandfathers Name : " + newGrandfathersName)
-    labelNicNumber.configure(text="NIC Number : " + newNicNumber)
-    labelOtherName.configure(text="Other Name : " + newOtherName)
-    labelFamilyCount.configure(text="Family Count : " + str(newFamilyCount))
-    labelSexCount.configure(text="Sex Count")
-    labelMCount.configure(text="M count : " + str(newMCount))
-    labelFCount.configure(text="F count : " + str(newFCount))
-    labelMarriageDate.configure(text="Marriage Date : " + newMarriageDate)
-    labelMarriagePlace.configure(text="Marriage Place : " + newMarriagePlace)
-    labelHusbandName.configure(text="Husband Name : " + newHusbandName)
-    labelWifeName.configure(text="Wife Name : " + newWifeName)
+        labelWifeName.configure(text="Wife Name : " + newWifeName)
 
 
 def fun():
@@ -538,23 +534,24 @@ if __name__ == '__main__':
     # Jobs :
     # person name - job
     # Label below Vital Stats in x=756 y=96 size=276x48 "Family Count"
-    label = Label(bottom, text='Family Count', font=('arial', font_size), fg='black', bg='white')
-    label.place(x=756, y=48)
+    labelFamilyCount = Label(bottom, text='Family Count', font=('arial', font_size), fg='black', bg='white')
+    labelFamilyCount.place(x=756, y=48)
     # Label below Family Count in x=756 y=144 size=276x48 "Sex Count"
-    labelFamilyCount = Label(bottom, text='Sex Count', font=('arial', font_size), fg='black', bg='white')
-    labelFamilyCount.place(x=756, y=96)
+    # labelFamilyCount = Label(bottom, text='Sex Count', font=('arial', font_size), fg='black', bg='white')
+    # labelFamilyCount.place(x=756, y=96)
     # Label below Sexuality Count in x=756 y=192 size=276x48 "M count"
-    labelSexCount = Label(bottom, text='M Count', font=('arial', font_size), fg='black', bg='white')
-    labelSexCount.place(x=756, y=144)
+    labelMCount = Label(bottom, text='Mal Count', font=('arial', font_size), fg='black', bg='white')
+    labelMCount.place(x=756, y=96)
     # Label Right to M Count in x=756 y=240 size=276x48 "F Count"
-    labelFCount = Label(bottom, text='F Count', font=('arial', font_size), fg='black', bg='white')
-    labelFCount.place(x=756, y=192)
+    labelFCount = Label(bottom, text='Female Count', font=('arial', font_size), fg='black', bg='white')
+    labelFCount.place(x=756, y=144)
     # Label below Sexuality Count in x=756 y=288 size=276x48 "Jobs"
-    labelMCount = Label(bottom, text='Jobs', font=('arial', font_size), fg='black', bg='white')
-    labelMCount.place(x=756, y=240)
-    # Label below Jobs in x=756 y=336 size=276x48 "person name - job"
-    labelJob = Label(bottom, text='person name - job', font=('arial', font_size), fg='black', bg='white')
-    labelJob.place(x=756, y=288)
+    # labelJobVital = Label(bottom, text='Jobs', font=('arial', font_size), fg='black', bg='white')
+    # labelJobVital.place(x=756, y=192)
+    # # Label below Jobs in x=756 y=336 size=276x48 "person name - job"
+    # labelJob = Label(bottom, text='person name - job', font=('arial', font_size), fg='black', bg='white')
+    # labelJob.place(x=756, y=240)
+    # (x=756, y=288)
     # Section 4
     # Section 4 Label in x=1092 y=48 size=276x48 "Marriage Certificate"
     label = Label(bottom, text='Marriage Certificate', font=('arial', 14), fg='black', bg='white')
